@@ -1,21 +1,26 @@
 package com.picotrake.API.auth;
 
 import java.util.Date;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class JWTUtil {
 
-    @Value("${jwt.secret}")
     private String SECRET_KEY;
-    private final long EXPIRATION_MS = 1000 * 60 * 720; 
+    private final long EXPIRATION_MS = 1000 * 60 * 720;
+    
+    @PostConstruct
+    public void init() {
+        Dotenv dotenv = Dotenv.load(); 
+        SECRET_KEY = dotenv.get("SECRET_KEY");
+    }
 
     public String generateToken(int userId) {
         return Jwts.builder()

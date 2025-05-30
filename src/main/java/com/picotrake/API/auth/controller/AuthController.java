@@ -14,6 +14,8 @@ import com.picotrake.API.dto.LoginRequest;
 import com.picotrake.API.model.Usuario;
 import com.picotrake.API.repository.UsuarioRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -29,7 +31,8 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-     @PostMapping("/login")
+    @Operation(tags = { "Autenticación" })
+    @PostMapping("/login")
     public ResponseEntity<JWTResponse> login(@RequestBody LoginRequest request) {
         Usuario usuario = usuarioRepository.findByEmail(request.getEmail())
             .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
