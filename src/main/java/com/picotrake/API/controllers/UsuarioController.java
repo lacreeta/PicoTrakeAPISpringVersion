@@ -1,4 +1,4 @@
-package com.picotrake.API.controller;
+package com.picotrake.API.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,22 +13,28 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+import com.picotrake.API.auth.JWTUtil;
+import com.picotrake.API.dto.DeleteUser;
 import com.picotrake.API.dto.UsuarioCreate;
 import com.picotrake.API.dto.UsuarioResponse;
-import com.picotrake.API.service.UsuarioServiceImpl;
+import com.picotrake.API.service.Impl.UsuarioServiceImpl;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/picotrake")
-public class RESTController {
+@RequestMapping("/api/picotrake/usuarios")
+public class UsuarioController {
     
     private UsuarioServiceImpl usuarioServiceImpl;
+    private JWTUtil jwtUtil;
 
     @Autowired
-    public RESTController(UsuarioServiceImpl usuarioServiceImpl) {
+    public UsuarioController(UsuarioServiceImpl usuarioServiceImpl, JWTUtil jwtUtil) {
         this.usuarioServiceImpl = usuarioServiceImpl;
+        this.jwtUtil = jwtUtil;
     }
 
     @Operation(tags = { "Usuarios" })
@@ -60,10 +66,17 @@ public class RESTController {
         return ResponseEntity.ok("Usuario creado correctamente.");
     }
 
-    @Operation(tags = { "Usuarios" })
-    @DeleteMapping("/usuarios")
-    public ResponseEntity<String> deleteUsuario(@RequestBody @Valid UsuarioCreate usuario) {
-        usuarioServiceImpl.createUsuario(usuario);
-        return ResponseEntity.ok("Usuario creado correctamente.");
+    @Operation(tags = { "Cuenta" })
+    @DeleteMapping("/usuarios/me")
+    @SecurityRequirement(name = "bearerAuth")
+    public ResponseEntity<String> deleteMyAccount(@RequestBody @Valid DeleteUser deleteUserRequest,
+            HttpServletRequest request) {
+
+        String authHeader = request.getHeader("Authorization");
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = Long.parseLong(jwtUtil.extractUserId(token));
+
+        usuarioServiceImpl.deleteMyAccount(userId, deleteUserRequest.getContrasena());
+        return ResponseEntity.ok("Tu cuenta ha sido eliminada correctamente.");
     }
 }

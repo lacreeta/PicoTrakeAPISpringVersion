@@ -1,4 +1,4 @@
-package com.picotrake.API.auth;
+package com.picotrake.API.auth.dto;
 
 import lombok.*;
 

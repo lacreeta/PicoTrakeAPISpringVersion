@@ -22,7 +22,7 @@ public class JWTUtil {
         SECRET_KEY = dotenv.get("SECRET_KEY");
     }
 
-    public String generateToken(int userId) {
+    public String generateToken(Long userId) {
         return Jwts.builder()
                 .setSubject(String.valueOf(userId)) 
                 .setIssuedAt(new Date())

@@ -11,5 +11,5 @@ public interface UsuarioService {
     List<UsuarioResponse> getAllUsuarios();
     Optional<UsuarioResponse> getUsuarioById(Long id);
     UsuarioResponse createUsuario(UsuarioCreate usuarioCreate);
-    void deleteUsuario(Long id);
+    void deleteMyAccount(Long userId, String rawPassword);
 }
