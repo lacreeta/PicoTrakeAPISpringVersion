@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/picotrake/suscripciones")
+@RequestMapping("/")
 public class SuscripcionController {
     
     private SuscripcionServiceImpl suscripcionServiceImpl;
@@ -52,7 +52,7 @@ public class SuscripcionController {
     }
 
     @Operation(tags = { "Suscripciones" })
-    @PutMapping("/{id}")
+    @PutMapping("/suscripciones/{id}")
     public ResponseEntity<SuscripcionResponse> updateSuscripcion(@PathVariable Long id, @RequestBody @Valid SuscripcionUpdateRequest request) {
         SuscripcionResponse response = suscripcionServiceImpl.updateSuscription(id, request);
         return ResponseEntity.ok(response);
@@ -66,7 +66,7 @@ public class SuscripcionController {
     }
 
     @Operation(tags = { "Suscripciones" })
-    @DeleteMapping("/suscripciones")
+    @DeleteMapping("/suscripciones/{id}")
     public ResponseEntity<String> deleteSuscription(@PathVariable Long id ) {
         suscripcionServiceImpl.deleteSuscription(id);
         return ResponseEntity.ok("Suscripción eliminada correctamente.");
