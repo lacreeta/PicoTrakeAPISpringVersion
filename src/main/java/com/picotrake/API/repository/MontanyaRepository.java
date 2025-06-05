@@ -8,5 +8,5 @@ import com.picotrake.API.model.Montanyas;
 
 public interface MontanyaRepository extends JpaRepository<Montanyas, Long> {
 
-    Optional<Montanyas> findByName(String nombre_ruta);
+    Optional<Montanyas> findByNombreMontanya(String nombreMontanya);
 }

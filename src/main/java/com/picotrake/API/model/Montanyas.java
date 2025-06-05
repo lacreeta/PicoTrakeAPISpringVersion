@@ -19,14 +19,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="montanyas")
+@Table(name = "montanyas")
 public class Montanyas {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id_montanya;
 
-    private String nombre_montanya;
+    private String nombreMontanya;
     private String descripcion;
 
     @Enumerated(EnumType.STRING)

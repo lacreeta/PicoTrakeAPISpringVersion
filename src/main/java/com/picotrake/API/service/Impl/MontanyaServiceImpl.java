@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.picotrake.API.dto.MontanyaResponse;
@@ -12,6 +13,7 @@ import com.picotrake.API.model.Montanyas;
 import com.picotrake.API.repository.MontanyaRepository;
 import com.picotrake.API.service.MontanyaService;
 
+@Service
 public class MontanyaServiceImpl implements MontanyaService {
 
     private final MontanyaRepository montanyaRepository;
@@ -22,6 +24,7 @@ public class MontanyaServiceImpl implements MontanyaService {
         this.montanyaRepository = montanyaRepository;
         this.montanyaMapper = montanyaMapper;
     }
+
     @Override
     public List<MontanyaResponse> getMountains() {
         return montanyaMapper.toResponse(montanyaRepository.findAll());
@@ -29,7 +32,7 @@ public class MontanyaServiceImpl implements MontanyaService {
 
     @Override
     public MontanyaResponse getMountainByName(String name) {
-        Montanyas montanya = montanyaRepository.findByName(name)
+        Montanyas montanya = montanyaRepository.findByNombreMontanya(name)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Montaña no encontrada"));
         return montanyaMapper.toResponse(montanya);
     }
@@ -40,5 +43,5 @@ public class MontanyaServiceImpl implements MontanyaService {
         Montanyas guardada = montanyaRepository.save(montanyas);
         return montanyaMapper.toResponse(guardada);
     }
-    
+
 }
