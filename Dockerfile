@@ -7,8 +7,10 @@ COPY . .
 RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
 
-ENV PORT=8080
+# Copia el .jar generado con nombre genérico para evitar errores con versiones
+RUN cp target/*.jar app.jar
 
+ENV PORT=8080
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/API-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "app.jar"]
