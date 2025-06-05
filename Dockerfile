@@ -4,10 +4,11 @@ WORKDIR /app
 
 COPY . .
 
-RUN chmod +x mvnw
-
+RUN chmod +x ./mvnw
 RUN ./mvnw clean package -DskipTests
+
+ENV PORT=8080
 
 EXPOSE 8080
 
-CMD ["ls", "-l", "target"]
+CMD ["java", "-jar", "target/API-0.0.1-SNAPSHOT.jar"]
