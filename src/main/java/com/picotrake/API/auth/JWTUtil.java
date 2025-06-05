@@ -15,16 +15,24 @@ public class JWTUtil {
 
     private String SECRET_KEY;
     private final long EXPIRATION_MS = 1000 * 60 * 720;
-    
+
     @PostConstruct
     public void init() {
-        Dotenv dotenv = Dotenv.load(); 
-        SECRET_KEY = dotenv.get("SECRET_KEY");
+        SECRET_KEY = System.getenv("JWT_SECRET");
+
+        if (SECRET_KEY == null || SECRET_KEY.isEmpty()) {
+            try {
+                Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
+                SECRET_KEY = dotenv.get("JWT_SECRET");
+            } catch (Exception e) {
+                throw new RuntimeException("No se pudo cargar JWT_SECRET ni desde entorno ni desde .env");
+            }
+        }
     }
 
     public String generateToken(Long userId) {
         return Jwts.builder()
-                .setSubject(String.valueOf(userId)) 
+                .setSubject(String.valueOf(userId))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
                 .signWith(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()), SignatureAlgorithm.HS256)
@@ -37,19 +45,18 @@ public class JWTUtil {
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
-                .getSubject(); 
+                .getSubject();
     }
 
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
-                .build()
-                .parseClaimsJws(token);
+                    .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes()))
+                    .build()
+                    .parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
             return false;
         }
     }
 }
-
