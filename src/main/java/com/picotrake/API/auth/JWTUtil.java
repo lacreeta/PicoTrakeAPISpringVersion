@@ -18,14 +18,14 @@ public class JWTUtil {
 
     @PostConstruct
     public void init() {
-        SECRET_KEY = System.getenv("JWT_SECRET");
+        SECRET_KEY = System.getenv("SECRET_KEY");
 
         if (SECRET_KEY == null || SECRET_KEY.isEmpty()) {
             try {
                 Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-                SECRET_KEY = dotenv.get("JWT_SECRET");
+                SECRET_KEY = dotenv.get("SECRET_KEY");
             } catch (Exception e) {
-                throw new RuntimeException("No se pudo cargar JWT_SECRET ni desde entorno ni desde .env");
+                throw new RuntimeException("No se pudo cargar SECRET_KEY ni desde entorno ni desde .env");
             }
         }
     }
