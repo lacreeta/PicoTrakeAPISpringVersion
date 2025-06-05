@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 
 	public static void main(String[] args) {
+		String port = System.getenv("PORT");
+		System.out.println("🧪 PORT desde entorno: " + port);
 		SpringApplication.run(Application.class, args);
-		System.out.println("PUERTO desde Railway: " + System.getenv("PORT"));
 	}
 }
