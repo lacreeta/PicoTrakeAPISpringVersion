@@ -1,15 +1,20 @@
-FROM eclipse-temurin:17-jdk
+# ---------- Etapa 1: build ----------
+FROM eclipse-temurin:17-jdk AS build
 
 WORKDIR /app
-
 COPY . .
 
-RUN chmod +x ./mvnw
-RUN ./mvnw clean package -DskipTests
+RUN chmod +x ./mvnw \
+ && MAVEN_OPTS="-Xmx512m" ./mvnw clean package -DskipTests
 
-# Copia el .jar generado con nombre genérico para evitar errores con versiones
-RUN cp target/*.jar app.jar
+# ---------- Etapa 2: runtime ----------
+FROM eclipse-temurin:17-jre AS runtime   # JRE = mucho más pequeño
 
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+
+# puerto interno estándar
 EXPOSE 8080
 
-CMD ["java", "-Xmx256m", "-Xms128m", "-jar", "app.jar"]
+# Limitar heap y dejar a la JVM ajustar el resto
+CMD ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]
