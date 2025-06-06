@@ -5,7 +5,8 @@ WORKDIR /app
 COPY . .
 
 RUN chmod +x ./mvnw \
- && MAVEN_OPTS="-Xmx512m" ./mvnw clean package -DskipTests
+ && MAVEN_OPTS="-Xmx512m" ./mvnw clean package -DskipTests \
+ && ./mvnw dependency:purge-local-repository -DmanualInclude="*" -DreResolve=false || true
 
 # ---------- Stage 2: Runtime ----------
 FROM eclipse-temurin:17-jre AS runtime
